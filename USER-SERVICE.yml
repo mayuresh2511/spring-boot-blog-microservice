@@ -5,15 +5,25 @@ spring:
       port: 5672
       username: guest
       password: guest
+   datasource:
+      url: jdbc:mysql://localhost:3306/user_microservice_db
+      username: root
+      password: #m@y25nov1998#
+      driver-class-name: com.mysql.cj.jdbc.Driver
+   jpa:
+      database-platform: org.hibernate.dialect.MySQL5Dialect
+      ddl-auto: update
 
+#Rabbit MQ queue name
 queue:
    name: test
 
+#Eureka Configurations
 eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
-  instance:
-    hostname: localhost
+   client:
+      register-with-eureka: false
+      fetch-registry: false
+      serviceUrl:
+         defaultZone: http://localhost:8761/eureka/
+   instance:
+      hostname: localhost

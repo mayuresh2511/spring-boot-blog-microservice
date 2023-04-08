@@ -12,7 +12,8 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
    jpa:
       database-platform: org.hibernate.dialect.MySQL5Dialect
-      ddl-auto: update
+      hibernate:
+         ddl-auto: update
 
 #Rabbit MQ queue name
 queue:

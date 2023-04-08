@@ -1,10 +1,12 @@
 
 spring:
+  #Rabbit MQ configurations
    rabbitmq:
       host: localhost
       port: 5672
       username: guest
       password: guest
+  #MySQL DB configurations
    datasource:
       url: jdbc:mysql://localhost:3306/user_microservice_db
       username: root
@@ -14,6 +16,12 @@ spring:
       database-platform: org.hibernate.dialect.MySQL5Dialect
       hibernate:
          ddl-auto: update
+  #Reddis Session management configurations
+   redis:
+      host: localhost
+      port: 6379
+   session:
+      store-type: redis 
 
 #Rabbit MQ queue name
 queue:

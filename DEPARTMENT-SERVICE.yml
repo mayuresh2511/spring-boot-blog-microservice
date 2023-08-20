@@ -8,8 +8,8 @@ spring:
       password: guest
   #MySQL DB configurations
    datasource:
-      #url: jdbc:mysql://localhost:3306/department_microservice_db
-      url: jdbc:mysql://mysql-container/user_microservice_db
+      url: jdbc:mysql://localhost:3306/department_microservice_db
+      #url: jdbc:mysql://mysql-container/user_microservice_db
       username: root
       password: "#m@y25nov1998#"
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -34,7 +34,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     serviceUrl:
-      #defaultZone: http://localhost:8761/eureka/
-      defaultZone: http://spring-service-registry/eureka/
+      defaultZone: http://localhost:8761/eureka/
+      #defaultZone: http://spring-service-registry/eureka/
   instance:
     hostname: localhost

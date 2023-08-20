@@ -13,9 +13,11 @@ spring:
       password: "#m@y25nov1998#"
       driver-class-name: com.mysql.cj.jdbc.Driver
    jpa:
-      database-platform: org.hibernate.dialect.MySQL5Dialect
       hibernate:
          ddl-auto: update
+      properties:
+         hibernate:
+            dialect: org.hibernate.dialect.MySQL5Dialect
   #Reddis Session management configurations
    redis:
       host: localhost

@@ -1,0 +1,32 @@
+server:
+   port : 9092
+#    ssl:
+#      key-store-type: PKCS12
+#      key-store: 'src/main/resources/keystore/springbootssl.p12'
+#      key-store-password: changeit
+#      key-alias: springbootssl
+
+spring:
+   profiles:
+      active: TEST
+   application:
+      name: USER-SERVICE
+
+---
+spring:
+   config:
+      activate:
+         on-profile: TEST
+      import: "optional:configserver:"
+   cloud:
+      config:
+         uri: http://localhost:8888
+---
+spring:
+   config:
+      activate:
+         on-profile: DEV
+      import: "optional:configserver:"
+   cloud:
+      config:
+         uri: http://sprin-config-server:8888

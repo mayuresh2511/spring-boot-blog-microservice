@@ -50,15 +50,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     logger.info("Bearer token found in header");
 
     jwtToken = authHeader.substring(7);
+    logger.info("JWT token in request - " + jwtToken);
     userName = jwtUtils.extractUsername(jwtToken);
 
     if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null){
       UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
       final boolean isValidToken = jwtUtils.validateToken(jwtToken, userDetails);
-
+      logger.info("isValidToken : " + isValidToken);
       if (isValidToken){
+        logger.info("Username : " + userDetails.getUsername() + " Password : " + userDetails.getPassword());
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
             new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+        logger.info("usernamePasswordToken : " + usernamePasswordAuthenticationToken);
         usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
       }

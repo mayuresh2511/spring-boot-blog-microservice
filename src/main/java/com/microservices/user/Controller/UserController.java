@@ -1,5 +1,8 @@
 package com.microservices.user.Controller;
 
+import com.microservices.user.filters.JwtAuthFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +27,8 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	private final Logger logger = LoggerFactory.getLogger(UserController.class);
+
 	@GetMapping("guest")
 	public String guestUser(HttpServletRequest request, HttpSession session){
 
@@ -34,6 +39,7 @@ public class UserController {
 	
 	@PostMapping("user/addUser")
 	public User addUser(@RequestBody User user) {
+		logger.info("User is : " + user);
 		return userService.addUser(user);
 	}
 

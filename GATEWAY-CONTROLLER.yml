@@ -2,10 +2,14 @@ spring:
   cloud:
     gateway:
       routes:
-      - id: path_routes
+      - id: department_service_route
         uri: http://localhost:9091
         predicates:
-        - Path=/department-service/**
+        - Cookie=myservice,department-service
+      - id: user_service_route
+        uri: http://localhost:9092
+        predicates:
+        - Cookie=myservice,user-service
 
 # spring:
 #   cloud:
@@ -15,8 +19,8 @@ spring:
 
 eureka:
   client:
-    register-with-eureka: false
-    fetch-registry: false
+    register-with-eureka: true
+    fetch-registry: true
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
   instance:

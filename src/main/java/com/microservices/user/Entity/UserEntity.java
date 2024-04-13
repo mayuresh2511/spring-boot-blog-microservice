@@ -15,14 +15,17 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class User {
+public class UserEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long userId;
 	private String userName;
+	private String userPassword;
+	private String userFirstName;
+	private String userLastName;
 	private String userEmailId;
 	private String userMobileNumber;
-	private Long departmentId;
+
 
 }

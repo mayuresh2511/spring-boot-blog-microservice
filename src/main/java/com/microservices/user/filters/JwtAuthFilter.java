@@ -1,7 +1,6 @@
 package com.microservices.user.filters;
 
 import com.microservices.user.config.JwtUtils;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,9 +20,9 @@ import java.io.IOException;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-  private UserDetailsService userDetailsService;
-  private JwtUtils jwtUtils;
-  private Logger logger = LoggerFactory.getLogger(JwtAuthFilter.class);
+  final private UserDetailsService userDetailsService;
+  final private JwtUtils jwtUtils;
+  final private Logger logger = LoggerFactory.getLogger(JwtAuthFilter.class);
 
   public JwtAuthFilter(UserDetailsService userDetailsService, JwtUtils jwtUtils) {
     this.userDetailsService = userDetailsService;

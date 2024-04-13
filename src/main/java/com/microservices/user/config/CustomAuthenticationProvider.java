@@ -10,15 +10,17 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
-  private UserDetailsService userDetailsService;
-  private Logger logger = LoggerFactory.getLogger(CustomAuthenticationProvider.class);
-
-  public CustomAuthenticationProvider(UserDetailsService userDetailsService) {
+  final private Logger logger = LoggerFactory.getLogger(CustomAuthenticationProvider.class);
+  final private UserDetailsService userDetailsService;
+  final PasswordEncoder passwordEncoder;
+  public CustomAuthenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    this.passwordEncoder = passwordEncoder;
     this.userDetailsService = userDetailsService;
   }
 
@@ -31,15 +33,12 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
 
-    if (userDetails != null){
-      if (password.equals(userDetails.getPassword())){
-        return new UsernamePasswordAuthenticationToken(userName, password, userDetails.getAuthorities());
-      }else {
-        throw new BadCredentialsException("Incorrect username or password");
-      }
-    }else {
-      throw new UsernameNotFoundException("User does not exist");
+    logger.info("User details password : " + userDetails.getPassword() + " encoded pass : " + password);
+
+    if (!passwordEncoder.matches(password, userDetails.getPassword())){
+      throw new BadCredentialsException("Incorrect username or password");
     }
+    return new UsernamePasswordAuthenticationToken(userName, password, userDetails.getAuthorities());
   }
 
   @Override

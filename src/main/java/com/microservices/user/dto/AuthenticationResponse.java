@@ -5,11 +5,13 @@ public class AuthenticationResponse {
   private String username;
   private boolean isAuthSuccessful;
   private String jwtToken;
+  private String authMessage;
 
-  public AuthenticationResponse(String username, boolean isAuthSuccessful, String jwtToken) {
+  public AuthenticationResponse(String username, boolean isAuthSuccessful, String jwtToken, String authMessage) {
     this.username = username;
     this.isAuthSuccessful = isAuthSuccessful;
     this.jwtToken = jwtToken;
+    this.authMessage = authMessage;
   }
 
   public AuthenticationResponse() {
@@ -40,12 +42,21 @@ public class AuthenticationResponse {
     this.jwtToken = jwtToken;
   }
 
+  public String getAuthMessage() {
+    return authMessage;
+  }
+
+  public void setAuthMessage(String authMessage) {
+    this.authMessage = authMessage;
+  }
+
   @Override
   public String toString() {
     return "AuthenticationResponse{" +
-        "username='" + username + '\'' +
-        ", isAuthSuccessful=" + isAuthSuccessful +
-        ", jwtToken='" + jwtToken + '\'' +
-        '}';
+            "username='" + username + '\'' +
+            ", isAuthSuccessful=" + isAuthSuccessful +
+            ", jwtToken='" + jwtToken + '\'' +
+            ", authMessage='" + authMessage + '\'' +
+            '}';
   }
 }

@@ -4,7 +4,5 @@ mvnw.cmd
 mvnw
 .mvn
 .gitignore
-.classpath
-.project
 .settings
 bin

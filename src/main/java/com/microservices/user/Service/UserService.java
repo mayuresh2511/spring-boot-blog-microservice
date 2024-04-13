@@ -1,85 +1,26 @@
 package com.microservices.user.Service;
 
-import com.microservices.user.dto.AuthenticationRequest;
-import com.microservices.user.dto.AuthenticationResponse;
-import com.microservices.user.vo.Department;
-import io.lettuce.core.output.ScoredValueScanOutput;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import com.microservices.user.Entity.UserEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import com.microservices.user.Entity.User;
 import com.microservices.user.Repository.UserRepository;
-import com.microservices.user.vo.ResponsTemplateVo;
 
 import jakarta.servlet.http.HttpSession;
 
 @Service
 public class UserService {
+	final private UserRepository userRepository;
 
-
-	private UserRepository userRepository;
-	private RestTemplate restTemplate;
-
-	public UserService(UserRepository userRepository, RestTemplate restTemplate) {
+	public UserService(UserRepository userRepository) {
 		this.userRepository = userRepository;
-		this.restTemplate = restTemplate;
 	}
 
-	public User addUser(User user) {
-		// TODO Auto-generated method stub
+	public UserEntity addUser(UserEntity user) {
 		System.out.println(user.getUserName());
 		return userRepository.save(user);
 	}
 
-	public ResponsTemplateVo 	getAnyUserAndDepInfo(Long userId) {
-		// TODO Auto-generated method stub
-		ResponsTemplateVo vo = new ResponsTemplateVo();
-		User user;
-
-		if (userRepository.findById(userId).isPresent()){
-			user = userRepository.findById(userId).get();
-			String authToken = getAuthToken();
-
-			HttpHeaders headers = new HttpHeaders();
-			headers.set("Authorization", "Bearer " + authToken);
-			HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-
-			ResponseEntity<Department> response = restTemplate.exchange(
-					"http://localhost:9091/deparments/" + user.getDepartmentId(),
-					HttpMethod.GET,
-					entity,
-					Department.class);
-
-			System.out.println(response.getStatusCode());
-			System.out.println(response);
-			vo.setDepartment(response.getBody());
-			vo.setUser(user);
-		}
-		return vo;
-	}
-
-	public ResponsTemplateVo getUserAndDepInfo(HttpSession session) {
-
-		ResponsTemplateVo vo = new ResponsTemplateVo();
-		Long userId = session.getAttribute("userId") != null ?
-				(Long) session.getAttribute("userId") : null;
-//		User user = userRepository.findById(userId).get();
-		ResponseEntity<String> response = restTemplate.getForEntity("http://DEPARTMENT-SERVICE/deparments/1",
-				String.class);
-//		System.out.println(department);
-//		vo.setDepartment(department);
-//		vo.setUser(user);
-		System.out.println(response.getStatusCode());
-		System.out.println(response.getBody());
-		return vo;
-
-	}
-
-	public void updateUserInfo(User user) {
+	public void updateUserInfo(UserEntity user) {
 		userRepository.save(user);
 	}
 
@@ -89,20 +30,4 @@ public class UserService {
 		userRepository.deleteById(userId);
 	}
 
-	private String getAuthToken(){
-		AuthenticationRequest authRequest = new AuthenticationRequest("user-service",
-				"#autheforuserservice#");
-		HttpEntity<AuthenticationRequest> requestEntity = new HttpEntity<>(authRequest);
-
-		ResponseEntity<AuthenticationResponse> authResponse = restTemplate.postForEntity(
-				"http://localhost:9091/api/v2/auth",
-				requestEntity,
-				AuthenticationResponse.class
-		);
-
-		System.out.println("Auth response code : " + authResponse.getStatusCode());
-		System.out.println("Auth body : " + authResponse.getBody());
-
-		return authResponse.getBody().getJwtToken();
-	}
 }

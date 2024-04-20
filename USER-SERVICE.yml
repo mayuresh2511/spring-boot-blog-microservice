@@ -21,7 +21,7 @@ spring:
   #Reddis Session management configurations
    redis:
       host: localhost
-      port: 6379
+      port: 6380
    session:
       store-type: redis 
 

@@ -1,4 +1,4 @@
-package com.microservices.user.message.config;
+package com.microservices.user.config.rabbitmq;
 
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Binding;
@@ -20,22 +20,22 @@ import org.springframework.amqp.core.Queue;
 @Configuration
 public class RabbitConfig {
 	
-	@Value("${queue.name}")
-	private String queueName;
+//	@Value("${queue.name}")
+//	private String queueName;
 	
 	@Bean
 	public Queue queue() {
-		return new Queue(queueName, true);
+		return new Queue("rabbitmq.queue", true);
 	}
 //	@Bean
 //	public DirectExchange deadLetterExchange() {
 //		return new DirectExchange("deadLetterExchange");
 //	}
 //	
-//	@Bean
-//	public DirectExchange javainuseExchange() {
-//		return new DirectExchange("javainuseExchange");
-//	}
+	@Bean
+	public DirectExchange exchange() {
+		return new DirectExchange("rabbitmq.exchange");
+	}
 //	
 //	@Bean
 //	public Queue dlq() {
@@ -53,19 +53,20 @@ public class RabbitConfig {
 //		return BindingBuilder.bind(dlq()).to(deadLetterExchange()).with("deadLetter");
 //	}
 //	
-//	@Bean 
-//	public Binding binding() {
-//		return BindingBuilder.bind(queue()).to(javainuseExchange()).with("javainuse");
-//	}
-//	
-//	@Bean
-//	public MessageConverter jsonMessageConverter() {
-//		return new Jackson2JsonMessageConverter();
-//	}
-//	
-//	public AmqpTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-//		final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-//		rabbitTemplate.setMessageConverter(jsonMessageConverter());
-//		return rabbitTemplate;
-//	}
+	@Bean
+	public Binding binding() {
+		return BindingBuilder.bind(queue()).to(exchange()).with("rabbitmq.routingkey");
+	}
+
+	@Bean
+	public MessageConverter jsonMessageConverter() {
+		return new Jackson2JsonMessageConverter();
+	}
+
+	@Bean
+	public AmqpTemplate amqpTemplate(ConnectionFactory connectionFactory) {
+		final RabbitTemplate amqpTemplate = new RabbitTemplate(connectionFactory);
+		amqpTemplate.setMessageConverter(jsonMessageConverter());
+		return amqpTemplate;
+	}
 }

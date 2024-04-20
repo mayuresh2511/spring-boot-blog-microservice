@@ -1,4 +1,4 @@
-package com.microservices.user.config;
+package com.microservices.user.config.security;
 
 import com.microservices.user.Entity.UserEntity;
 import com.microservices.user.Repository.UserRepository;

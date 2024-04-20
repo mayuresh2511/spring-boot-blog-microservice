@@ -1,4 +1,4 @@
-package com.microservices.user.config;
+package com.microservices.user.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

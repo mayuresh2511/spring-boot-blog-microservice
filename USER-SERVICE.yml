@@ -41,10 +41,14 @@ eureka:
 
 #Actuator and prometheus configuration
 management:
-  endpoints:
-    web:
-      exposure:
-        include: "prometheus"
-  metrics:
-    tags:
-      application: USER-SERVICE
+   endpoints:
+      web:
+         exposure:
+            include:
+               - info
+               - health
+               - prometheus
+
+   metrics:
+      tags:
+         application: USER-SERVICE

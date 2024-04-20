@@ -2,13 +2,13 @@
 spring:
   #Rabbit MQ configurations
    rabbitmq:
-      host: localhost
+      host: user-service-rabbitmq-container-1
       port: 5672
       username: guest
       password: guest
   #MySQL DB configurations
    datasource:
-      url: jdbc:mysql://mysql-container:3306/user_microservice_db
+      url: jdbc:mysql://user-service-mysqldb-container-1:3306/user_microservice_db
       username: root
       password: "#m@y25nov1998#"
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -35,6 +35,22 @@ eureka:
       register-with-eureka: true
       fetch-registry: true
       serviceUrl:
-         defaultZone: http://spring-service-registry:8761/eureka/
+         defaultZone: http://user-service-service-registry-1:8761/eureka/
    instance:
       hostname: localhost
+
+#Actuator and prometheus configuration
+management:
+   endpoints:
+      prometheus:
+         enabled: true
+      web:
+         exposure:
+            include:
+               - info
+               - health
+               - metrics
+               - prometheus
+   metrics:
+      tags:
+         application: USER-SERVICE

@@ -38,3 +38,13 @@ eureka:
          defaultZone: http://localhost:8761/eureka/
    instance:
       hostname: localhost
+
+#Actuator and prometheus configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus"
+  metrics:
+    tags:
+      application: ${spring.application.name}

@@ -42,11 +42,14 @@ eureka:
 #Actuator and prometheus configuration
 management:
    endpoints:
+      prometheus:
+         enabled: true
       web:
          exposure:
             include:
                - info
                - health
+               - metrics
                - prometheus
 
    metrics:

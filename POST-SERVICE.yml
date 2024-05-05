@@ -3,7 +3,7 @@ spring:
    #Mongo DB configurations
    data:
       mongodb:
-         uri: mongodb://mayureshmarathe123:2MdedbmKMsz8b9Eu@maymarmongo.9yyskci.mongodb.net/PostService
+         uri: mongodb+srv://mayureshmarathe123:2MdedbmKMsz8b9Eu@maymarmongo.9yyskci.mongodb.net/PostService
 
 #Eureka Configurations
 eureka:

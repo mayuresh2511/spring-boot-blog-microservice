@@ -1,0 +1,26 @@
+server:
+  port : 9098
+
+spring:
+  profiles:
+    active: TEST
+  application:
+    name: POST-SERVICE
+---
+spring:
+  config:
+    activate:
+      on-profile: TEST
+    import: "optional:configserver:"
+  cloud:
+    config:
+      uri: http://localhost:8888
+---
+spring:
+  config:
+    activate:
+      on-profile: DEV
+    import: "optional:configserver:"
+  cloud:
+    config:
+      uri: http://user-service-config-server-1:8888

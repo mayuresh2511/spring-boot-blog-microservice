@@ -57,12 +57,15 @@ public class SecurityConfig {
     http
         .csrf(csrf -> csrf.disable())
         .authorizeRequests(auth -> auth
-                .requestMatchers(new AntPathRequestMatcher("/**/auth/**"),
-                        new AntPathRequestMatcher("/**/register/**"))
-                .permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAuthority("ROLE_ADMIN")
-                .anyRequest()
-                .authenticated()
+                        .anyRequest()
+                        .permitAll()
+//                .requestMatchers(new AntPathRequestMatcher("/**/auth/**"),
+//                        new AntPathRequestMatcher("/**/register/**"),
+//                        new AntPathRequestMatcher("/actuator/**"))
+//                .permitAll()
+//                .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAuthority("ROLE_ADMIN")
+//                .anyRequest()
+//                .authenticated()
         )
         .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authenticationProvider(authenticationProvider)

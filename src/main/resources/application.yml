@@ -1,5 +1,5 @@
 server:
-   port : 9092
+   port : 9094
 #    ssl:
 #      key-store-type: PKCS12
 #      key-store: 'src/main/resources/keystore/springbootssl.p12'
@@ -11,7 +11,12 @@ spring:
       active: TEST
    application:
       name: USER-SERVICE
-
+logging:
+   level:
+      org:
+         springframework:
+            web: DEBUG
+   file: 'src/main/resources/logs/spring-boot-logging.log'
 ---
 spring:
    config:
@@ -29,4 +34,4 @@ spring:
       import: "optional:configserver:"
    cloud:
       config:
-         uri: http://sprin-config-server:8888
+         uri: http://user-service-config-server-1:8888

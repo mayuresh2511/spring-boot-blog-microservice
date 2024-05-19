@@ -50,18 +50,18 @@ services:
       - '8888:8888'
     networks:
       - spring-microservices-network
-  user-service:
-    depends_on:
-      - service-registry
-      - config-server
-      - mysqldb-container
-      - rabbitmq-container
-      - redis-container
-    image: 'user-service:1.0'
-    ports:
-      - '9092:9092'
-    networks:
-      - spring-microservices-network
+#  user-service:
+#    depends_on:
+#      - service-registry
+#      - config-server
+#      - mysqldb-container
+#      - rabbitmq-container
+#      - redis-container
+#    image: 'user-service:1.0'
+#    ports:
+#      - '9092:9092'
+#    networks:
+#      - spring-microservices-network
 
 networks:
   spring-microservices-network:

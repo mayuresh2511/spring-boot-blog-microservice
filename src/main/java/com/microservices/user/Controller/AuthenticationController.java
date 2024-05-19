@@ -1,5 +1,7 @@
 package com.microservices.user.Controller;
 
+import com.microservices.user.Service.RegistrationService;
+import com.microservices.user.model.UserRegistrationRequest;
 import com.microservices.user.utils.JwtUtils;
 import com.microservices.user.model.AuthenticationRequest;
 import com.microservices.user.model.AuthenticationResponse;
@@ -19,23 +21,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/user/api/v1/")
 public class AuthenticationController {
 
   final private Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
   final private AuthenticationManager authenticationManager;
   final private UserDetailsService userDetailsService;
   final private JwtUtils jwtUtils;
+  final private RegistrationService registrationService;
 
   public AuthenticationController(AuthenticationManager authenticationManager,
                                   UserDetailsService userDetailsService,
-                                  JwtUtils jwtUtils) {
+                                  JwtUtils jwtUtils,
+                                  RegistrationService registrationService) {
     this.authenticationManager = authenticationManager;
     this.userDetailsService = userDetailsService;
     this.jwtUtils = jwtUtils;
+    this.registrationService = registrationService;
   }
 
-  @PostMapping
+  @PostMapping("auth")
   public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest){
 
     logger.info("Inside authentication controller class");
@@ -76,4 +81,19 @@ public class AuthenticationController {
     return ResponseEntity.ok(authResponse);
   }
 
+  @PostMapping("register")
+  public ResponseEntity<String> userRegistration(@RequestBody UserRegistrationRequest userData){
+
+    logger.info("Inside of registration controller");
+    try{
+      boolean isRegistered = registrationService.registerUser(userData);
+      if (isRegistered){
+        return ResponseEntity.ok().body("You are successfully registered");
+      }
+      return ResponseEntity.internalServerError().body("Facing technical issue right now");
+    }catch(Exception e){
+      logger.error("Exception occured while registering user: " + e.getMessage());
+      return ResponseEntity.internalServerError().body("Facing technical issue right now");
+    }
+  }
 }

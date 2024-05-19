@@ -11,12 +11,12 @@ spring:
       active: TEST
    application:
       name: USER-SERVICE
-logging:
-   level:
-      org:
-         springframework:
-            web: DEBUG
-   file: 'src/main/resources/logs/spring-boot-logging.log'
+#logging:
+#   level:
+#      org:
+#         springframework:
+#            web: DEBUG
+#   file: 'src/main/resources/logs/spring-boot-logging.log'
 ---
 spring:
    config:

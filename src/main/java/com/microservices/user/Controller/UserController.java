@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/user/api/v1/")
 public class UserController {
 
 	@Autowired
@@ -28,7 +28,7 @@ public class UserController {
 
 	@GetMapping("guest")
 	public String guestUser(HttpServletRequest request){
-
+		logger.info("User id : " + request.getHeader("loggedInUser"));
 		return "Hello Guest User";
 	}
 	

@@ -3,8 +3,8 @@ spring:
    #Mongo DB configurations
    data:
       mongodb:
-         # Changed password to "EPtCAXTCWjfOEcQ0" as you have stupidely pushed the file on GitHub public repo
-         uri: mongodb+srv://mayureshmarathe123:EPtCAXTCWjfOEcQ0@maymarmongo.9yyskci.mongodb.net/PostService 
+         # Changed password to "y4vF49W7TKLAvbQ1" as you have stupidely pushed the file on GitHub public repo
+         uri: mongodb+srv://mayureshmarathe123:y4vF49W7TKLAvbQ1@maymarmongo.9yyskci.mongodb.net/PostService 
 
 #Eureka Configurations
 eureka:

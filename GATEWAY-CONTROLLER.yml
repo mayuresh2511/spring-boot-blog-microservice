@@ -2,20 +2,15 @@ spring:
   cloud:
     gateway:
       routes:
-      - id: department_service_route
-        uri: http://localhost:9091
+      - id: post-service
+        uri: lb://POST-SERVICE
         predicates:
-        - Cookie=myservice,department-service
-      - id: user_service_route
-        uri: http://localhost:9092
+          - Path=/post/**
+        
+      - id: user-service
+        uri: lb://USER-SERVICE
         predicates:
-        - Cookie=myservice,user-service
-
-# spring:
-#   cloud:
-#     gateway:
-#       discovery.locator:
-#         enabled: true
+          - Path=/user/**
 
 eureka:
   client:

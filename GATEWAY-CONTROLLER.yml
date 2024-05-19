@@ -6,11 +6,22 @@ spring:
         uri: lb://POST-SERVICE
         predicates:
           - Path=/post/**
-        
+        filters:
+        - name: AuthorizationGatewayFilter
+          args:
+            preFilter: true
+            postFilter: false
+
       - id: user-service
         uri: lb://USER-SERVICE
         predicates:
           - Path=/user/**
+        filters:
+        - name: AuthorizationGatewayFilter
+          args:
+            preFilter: true
+            postFilter: false
+        
 
 eureka:
   client:

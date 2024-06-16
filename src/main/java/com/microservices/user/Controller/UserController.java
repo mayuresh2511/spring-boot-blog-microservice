@@ -20,10 +20,8 @@ import jakarta.servlet.http.HttpSession;
 @RestController
 @RequestMapping("/user/api/v1/")
 public class UserController {
-
 	@Autowired
 	private UserService userService;
-
 	private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@GetMapping("guest")
@@ -44,10 +42,9 @@ public class UserController {
 		return "User Info Updated Successfully";
 	}
 
-	@DeleteMapping("user/deleteMyInfo")
-	public String deleteUserInfo(HttpSession session){
-		userService.deleteUserInfo(session);
+	@DeleteMapping("user/deleteAccount")
+	public String deleteUserInfo(HttpServletRequest request){
+		userService.deleteUserInfo(request.getHeader("loggedInUser"));
 		return "User Info Deleted Successfully";
 	}
-	
 }

@@ -24,10 +24,8 @@ public class UserService {
 		userRepository.save(user);
 	}
 
-	public void deleteUserInfo(HttpSession session) {
-		Long userId = session.getAttribute("userId") != null ?
-				(Long) session.getAttribute("userId") : null;
-		userRepository.deleteById(userId);
+	public void deleteUserInfo(String userName) {
+		userRepository.deleteByUserName(userName);
 	}
 
 }

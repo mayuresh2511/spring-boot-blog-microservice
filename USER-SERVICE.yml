@@ -4,13 +4,13 @@ spring:
    rabbitmq:
       host: localhost
       port: 5672
-      username: guest
-      password: guest
+      username: ${RABBITMQ_USERNAME}
+      password: ${RABBITMQ_PASSWORD}
   #MySQL DB configurations
    datasource:
-      url: jdbc:mysql://localhost:3306/user_microservice_db
-      username: root
-      password: "#m@y25nov1998#"
+      url: ${USER_MICROSERVICE_MYSQL_URL}
+      username: ${MYSQL_USERNAME}
+      password: ${MYSQL_PASSWORD}
       driver-class-name: com.mysql.cj.jdbc.Driver
    jpa:
       hibernate:
@@ -35,7 +35,7 @@ eureka:
       register-with-eureka: true
       fetch-registry: true
       serviceUrl:
-         defaultZone: http://localhost:8761/eureka/
+         defaultZone: ${EUREKA_DEFAULTZONE}
    instance:
       hostname: localhost
 
@@ -55,6 +55,13 @@ management:
    metrics:
       tags:
          application: USER-SERVICE
+
+#AWS Configuration
+aws:
+   accessKey: ${AWS_ACCESS_KEY}
+   secretKey: ${AWS_SECRET_KEY}
+   region: ${AWS_REGION}
+   snsArn: ${AWS_SNS_ARN}
 
 user:
    service:

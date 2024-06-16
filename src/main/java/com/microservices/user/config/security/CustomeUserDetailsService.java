@@ -24,16 +24,19 @@ public class CustomeUserDetailsService implements UserDetailsService {
   }
 
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+  public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     logger.info("Inside CustomUserDetailsService loadUserByUsername method");
 
     UserEntity user = userRepository.findByUserName(username);
 
     if (user != null){
-      return User.withUsername(user.getUserName())
-              .password(user.getUserPassword())
-              .authorities(Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")))
-              .build();
+      return new CustomUserDetails(user.getUserName(),
+              user.getUserPassword(),
+              Collections.singleton(new SimpleGrantedAuthority(user.getUserRole())),
+              user.getUserRole(),
+              user.getSubscriptionCategory(),
+              user.isEmailVerified(),
+              user.isMobileVerified());
     }else {
       throw new UsernameNotFoundException("User not registered with us !! Please try with registered username or register first");
     }

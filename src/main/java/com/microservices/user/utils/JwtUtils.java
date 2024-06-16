@@ -21,9 +21,8 @@ public class JwtUtils {
 
   private static String SECRET_KEY = "2B4B6250655368566D5971337436763979244226452948404D635166546A576E";
 
-  public String generateToken(UserDetails userDetails) {
-    Map<String, Object> claims = new HashMap<>();
-    return createToken(claims, userDetails.getUsername());
+  public String generateToken(Map<String, Object> claims, String userName) {
+    return createToken(claims, userName);
   }
 
   private String createToken(Map<String, Object> claims, String subject) {

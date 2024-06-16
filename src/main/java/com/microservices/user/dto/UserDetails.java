@@ -20,6 +20,13 @@ public class UserDetails {
 		this.mobileNumber = user.getMobileNumber();
 	}
 
+	public UserDetails(String firstName, String lastName, String emailId, String mobileNumber){
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.emailId = emailId;
+		this.mobileNumber = mobileNumber;
+	}
+
 	public String getFirstName() {
 		return firstName;
 	}

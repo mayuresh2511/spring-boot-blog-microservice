@@ -4,7 +4,7 @@ spring:
    data:
       mongodb:
          # Changed password to "26FFCu61AsK0tw3u" as you have stupidely pushed the file on GitHub public repo
-         uri: mongodb+srv://mayureshmarathe123:26FFCu61AsK0tw3u@maymarmongo.9yyskci.mongodb.net/PostService 
+         uri: ${MONGO_URI}
 
 #Eureka Configurations
 eureka:
@@ -12,7 +12,7 @@ eureka:
       register-with-eureka: true
       fetch-registry: true
       serviceUrl:
-         defaultZone: http://localhost:8761/eureka/
+         defaultZone: ${EUREKA_DEFAULTZONE}
    instance:
       hostname: localhost
 
@@ -30,3 +30,14 @@ management:
    metrics:
       tags:
          application: POST-SERVICE
+
+#AWS Configuration
+aws:
+   accessKey: ${AWS_ACCESS_KEY}
+   secretKey: ${AWS_SECRET_KEY}
+   region: ${AWS_REGION}
+   snsArn: ${AWS_SNS_ARN}
+
+user:
+   service:
+      testEnvVariable: ${JAVA_HOME}

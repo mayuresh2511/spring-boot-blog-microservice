@@ -55,3 +55,7 @@ management:
    metrics:
       tags:
          application: USER-SERVICE
+
+user:
+   service:
+      testEnvVariable: ${JAVA_HOME}

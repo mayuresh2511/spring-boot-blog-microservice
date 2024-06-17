@@ -36,7 +36,7 @@ aws:
    accessKey: ${AWS_ACCESS_KEY}
    secretKey: ${AWS_SECRET_KEY}
    region: ${AWS_REGION}
-   snsArn: ${AWS_SNS_ARN}
+   s3Bucket: ${AWS_S3_BUCKET}
 
 user:
    service:

@@ -25,6 +25,16 @@ public class JwtUtils {
         return extractClaim(token, Claims::getExpiration);
     }
 
+    public String extractClaim(String token, String claimKey){
+        try{
+            Claims claims = extractAllClaims(token);
+            return (String) claims.get(claimKey);
+        }catch (Exception exception){
+            System.out.println("Exception while getting claim");
+            return "";
+        }
+    }
+
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);

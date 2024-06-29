@@ -1,6 +1,9 @@
 package com.example.gatewayController.filter;
 
 import com.example.gatewayController.util.JwtUtils;
+import com.example.gatewayController.util.Utility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -10,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuthorizationGatewayFilter extends AbstractGatewayFilterFactory<AuthorizationGatewayFilter.Config> {
-
+    final private Logger logger = LoggerFactory.getLogger(AuthorizationGatewayFilter.class);
     @Autowired
     private RouteValidator validator;
     @Autowired
@@ -25,38 +28,48 @@ public class AuthorizationGatewayFilter extends AbstractGatewayFilterFactory<Aut
         return ((exchange, chain) -> {
 
             if (config.isPreFilter()){
-                System.out.println("Auth filter is on");
-
+                logger.info("Auth filter is on");
+                ServerHttpRequest request;
                 if (validator.isSecured.test(exchange.getRequest())){
 
                     if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)){
-                        System.out.println("Auth token not passed");
+                        logger.info("Auth token not passed");
                         throw new RuntimeException("Auth token not passed");
                     }
 
-                    ServerHttpRequest request;
                     String token = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
                     if (token != null && token.startsWith("Bearer ")){
                         token = token.substring(7);
                     }
-
+                    logger.info("JWT Token : " + token);
                     boolean isValidToken = jwtUtils.validateToken(token);
 
                     if (!isValidToken){
-                        System.out.println("Token is not valid");
+                        logger.info("Token is not valid");
                         throw new RuntimeException("Token is not valid");
                     }
+                    String userName = jwtUtils.extractUsername(token);
+                    String userRole = jwtUtils.extractClaim(token, "USER_ROLE");
+                    String userSubscription = jwtUtils.extractClaim(token, "SUBSCRIPTION_CATEGORY");
 
                     request = exchange.getRequest()
                             .mutate()
-                            .header("loggedInUser", jwtUtils.extractUsername(token))
+                            .header("loggedInUser", userName)
+                            .header("hashKey", Utility.generateHash(userName))
+                            .header("USER_ROLE", userRole)
+                            .header("SUBSCRIPTION_CATEGORY", userSubscription)
                             .build();
                     return chain.filter(exchange.mutate().request(request).build());
                 }else{
-                    return chain.filter(exchange);
+                    request = exchange.getRequest()
+                            .mutate()
+                            .header("loggedInUser", "Guest")
+                            .header("hashKey", Utility.generateHash("Guest"))
+                            .build();
+                    return chain.filter(exchange.mutate().request(request).build());
                 }
             }else {
-                System.out.println("Auth filter has been turned off");
+                logger.info("Auth filter has been turned off");
                 return chain.filter(exchange);
             }
         });

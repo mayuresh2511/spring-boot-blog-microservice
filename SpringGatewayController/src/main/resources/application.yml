@@ -1,0 +1,30 @@
+server:
+    port : 8072
+
+spring:
+  profiles:
+    active: TEST
+  application:
+    name: GATEWAY-CONTROLLER
+#   cloud:
+#     config:
+#       import-check:
+#         enabled: false
+---
+spring:
+ config:
+   activate:
+     on-profile: TEST
+   import: "optional:configserver:"
+ cloud:
+   config:
+     uri: http://localhost:8888
+---
+spring:
+ config:
+   activate:
+     on-profile: DEV
+   import: "optional:configserver:"
+ cloud:
+   config:
+     uri: http://sprin-config-server:8888

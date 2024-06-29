@@ -1,0 +1,33 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: post-service
+        uri: lb://POST-SERVICE
+        predicates:
+          - Path=/post/**
+        filters:
+        - name: AuthorizationGatewayFilter
+          args:
+            preFilter: true
+            postFilter: false
+
+      - id: user-service
+        uri: lb://USER-SERVICE
+        predicates:
+          - Path=/user/**
+        filters:
+        - name: AuthorizationGatewayFilter
+          args:
+            preFilter: true
+            postFilter: false
+        
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost

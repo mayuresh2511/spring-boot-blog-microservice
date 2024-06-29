@@ -1,0 +1,44 @@
+
+spring:
+   #Mongo DB configurations
+   data:
+      mongodb:
+         # Changed password to "26FFCu61AsK0tw3u" as you have stupidely pushed the file on GitHub public repo
+         uri: ${MONGO_URI}
+
+#Eureka Configurations
+eureka:
+   client:
+      register-with-eureka: true
+      fetch-registry: true
+      serviceUrl:
+         defaultZone: ${EUREKA_DEFAULTZONE}
+   instance:
+      hostname: localhost
+
+#Actuator and prometheus configuration
+management:
+   endpoints:
+      prometheus:
+         enabled: true
+      web:
+         exposure:
+            include:
+               - info
+               - health
+               - metrics
+   metrics:
+      tags:
+         application: POST-SERVICE
+
+#AWS Configuration
+aws:
+   accessKey: ${AWS_ACCESS_KEY}
+   secretKey: ${AWS_SECRET_KEY}
+   region: ${AWS_REGION}
+   snsArn: ${AWS_SNS_ARN}
+   s3Bucket: ${AWS_S3_BUCKET}
+
+user:
+   service:
+      testEnvVariable: ${JAVA_HOME}

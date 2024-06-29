@@ -1,0 +1,56 @@
+
+spring:
+  #Rabbit MQ configurations
+   rabbitmq:
+      host: user-service-rabbitmq-container-1
+      port: 5672
+      username: guest
+      password: guest
+  #MySQL DB configurations
+   datasource:
+      url: jdbc:mysql://user-service-mysqldb-container-1:3306/user_microservice_db
+      username: root
+      password: "#m@y25nov1998#"
+      driver-class-name: com.mysql.cj.jdbc.Driver
+   jpa:
+      hibernate:
+         ddl-auto: update
+      properties:
+         hibernate:
+            dialect: org.hibernate.dialect.MySQLDialect
+  #Reddis Session management configurations
+   redis:
+      host: localhost
+      port: 6379
+   session:
+      store-type: redis 
+
+#Rabbit MQ queue name
+queue:
+   name: test
+
+#Eureka Configurations
+eureka:
+   client:
+      register-with-eureka: true
+      fetch-registry: true
+      serviceUrl:
+         defaultZone: http://user-service-service-registry-1:8761/eureka/
+   instance:
+      hostname: localhost
+
+#Actuator and prometheus configuration
+management:
+   endpoints:
+      prometheus:
+         enabled: true
+      web:
+         exposure:
+            include:
+               - info
+               - health
+               - metrics
+               - prometheus
+   metrics:
+      tags:
+         application: USER-SERVICE

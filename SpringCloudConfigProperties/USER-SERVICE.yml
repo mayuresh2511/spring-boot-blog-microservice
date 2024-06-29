@@ -1,0 +1,68 @@
+
+spring:
+  #Rabbit MQ configurations
+   rabbitmq:
+      host: localhost
+      port: 5672
+      username: ${RABBITMQ_USERNAME}
+      password: ${RABBITMQ_PASSWORD}
+  #MySQL DB configurations
+   datasource:
+      url: ${USER_MICROSERVICE_MYSQL_URL}
+      username: ${MYSQL_USERNAME}
+      password: ${MYSQL_PASSWORD}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+   jpa:
+      hibernate:
+         ddl-auto: update
+      properties:
+         hibernate:
+            dialect: org.hibernate.dialect.MySQLDialect
+  #Reddis Session management configurations
+   redis:
+      host: localhost
+      port: 6380
+   session:
+      store-type: redis 
+
+#Rabbit MQ queue name
+queue:
+   name: test
+
+#Eureka Configurations
+eureka:
+   client:
+      register-with-eureka: true
+      fetch-registry: true
+      serviceUrl:
+         defaultZone: ${EUREKA_DEFAULTZONE}
+   instance:
+      hostname: localhost
+
+#Actuator and prometheus configuration
+management:
+   endpoints:
+      prometheus:
+         enabled: true
+      web:
+         exposure:
+            include:
+               - info
+               - health
+               - metrics
+               - prometheus
+
+   metrics:
+      tags:
+         application: USER-SERVICE
+
+#AWS Configuration
+aws:
+   accessKey: ${AWS_ACCESS_KEY}
+   secretKey: ${AWS_SECRET_KEY}
+   region: ${AWS_REGION}
+   snsArn: ${AWS_SNS_ARN}
+
+user:
+   service:
+      testEnvVariable: ${JAVA_HOME}

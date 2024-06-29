@@ -1,16 +1,20 @@
 package com.microservices.user.Service;
 
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.model.PublishRequest;
+import com.amazonaws.services.sns.model.PublishResult;
+import com.google.gson.Gson;
 import com.microservices.user.Entity.UserEntity;
 import com.microservices.user.Repository.UserRepository;
 import com.microservices.user.config.security.CustomUserDetails;
+import com.microservices.user.dto.awsSns.UserDetails;
 import com.microservices.user.model.AuthenticationRequest;
 import com.microservices.user.model.AuthenticationResponse;
 import com.microservices.user.model.UserRegistrationRequest;
 import com.microservices.user.utils.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,22 +33,22 @@ public class AuthenticationService {
     final private UserDetailsService userDetailsService;
     final private JwtUtils jwtUtils;
     final private PasswordEncoder passwordEncoder;
-    final private RabbitTemplate rabbitTemplate;
-    final private Queue queue;
+    final private AmazonSNS amazonSNSClient;
+    @Value("${aws.snsArn}")
+    private String snsArn;
+
     public AuthenticationService(UserRepository userRepository,
                                  AuthenticationManager authenticationManager,
                                  UserDetailsService userDetailsService,
                                  JwtUtils jwtUtils,
                                  PasswordEncoder passwordEncoder,
-                                 RabbitTemplate rabbitTemplate,
-                                 Queue queue){
+                                 AmazonSNS amazonSNSClient){
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.jwtUtils = jwtUtils;
-        this.rabbitTemplate = rabbitTemplate;
-        this.queue = queue;
+        this.amazonSNSClient = amazonSNSClient;
     }
     public boolean registerUser(UserRegistrationRequest userData) {
 
@@ -53,9 +57,13 @@ public class AuthenticationService {
         copyAllFields(user, userData, encodedPassword);
         userRepository.save(user);
 
-        //TODO: Uncomment later
-        // UserDetails userDetails = new UserDetails(userData);
-        // rabbitTemplate.convertAndSend(this.queue.getName(), userDetails);
+        UserDetails userDetails = new UserDetails(userData);
+        Gson gson = new Gson();
+        PublishResult publishResult = amazonSNSClient.publish(new PublishRequest
+                (snsArn, gson.toJson(userDetails))
+        );
+
+        System.out.println("Publish result => " + publishResult.getMessageId());
 
         return true;
     }

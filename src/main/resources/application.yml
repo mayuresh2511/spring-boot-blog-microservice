@@ -11,6 +11,7 @@ spring:
       active: TEST
    application:
       name: USER-SERVICE
+
 #logging:
 #   level:
 #      org:

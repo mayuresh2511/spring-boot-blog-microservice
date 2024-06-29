@@ -1,4 +1,4 @@
-package com.microservices.user.dto;
+package com.microservices.user.dto.awsSns;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -18,13 +18,6 @@ public class UserDetails {
 		this.lastName = user.getLastName();
 		this.emailId = user.getEmailAddress();
 		this.mobileNumber = user.getMobileNumber();
-	}
-
-	public UserDetails(String firstName, String lastName, String emailId, String mobileNumber){
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.emailId = emailId;
-		this.mobileNumber = mobileNumber;
 	}
 
 	public String getFirstName() {

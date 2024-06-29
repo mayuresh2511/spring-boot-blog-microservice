@@ -1,0 +1,14 @@
+server:
+  port : 9096
+
+spring:
+  application:
+    name: NOTIFICATION-SERVICE
+
+#AWS Configuration
+aws:
+  accessKey: ${AWS_ACCESS_KEY}
+  secretKey: ${AWS_SECRET_KEY}
+  region: ${AWS_REGION}
+  snsArn: ${AWS_SNS_ARN}
+#  sqsUri: ${AWS_SQS_URI}

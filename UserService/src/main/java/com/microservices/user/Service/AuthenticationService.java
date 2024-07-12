@@ -60,7 +60,7 @@ public class AuthenticationService {
         UserDetails userDetails = new UserDetails(userData);
         Gson gson = new Gson();
         PublishResult publishResult = amazonSNSClient.publish(new PublishRequest
-                (snsArn, gson.toJson(userDetails))
+                (snsArn, gson.toJson(userDetails), "User Registration Event")
         );
 
         System.out.println("Publish result => " + publishResult.getMessageId());

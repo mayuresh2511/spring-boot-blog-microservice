@@ -42,7 +42,7 @@ public class VerificationService {
 
         Gson gson = new Gson();
         PublishResult publishResult = amazonSNSClient.publish(new PublishRequest
-                (snsArn, gson.toJson(otpEventDto))
+                (snsArn, gson.toJson(otpEventDto), "OTP Generation Event")
         );
 
         System.out.println("Publish result => " + publishResult.getMessageId());
@@ -61,6 +61,7 @@ public class VerificationService {
         }
 
         int updateCount = userRepository.updateUserSetIsEmailVerifiedForUserName(true, userName);
+        int otpUpdateCount = userRepository.updateUserSetEmailVerificationOtpForUserName(null, userName);
 
         System.out.println("User update count => " + updateCount);
     }

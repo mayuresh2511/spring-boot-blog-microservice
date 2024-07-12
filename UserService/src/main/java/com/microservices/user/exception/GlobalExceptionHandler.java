@@ -55,6 +55,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentialException(RuntimeException runtimeException){
+        System.out.println("Runtime exception message : " + runtimeException.getMessage());
+        System.out.println("Runtime exception cause : " + runtimeException.getCause());
         ErrorResponse errorResponse = new ErrorResponse(
                 LocalDateTime.now(),
                 "5000",

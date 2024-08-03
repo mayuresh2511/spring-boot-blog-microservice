@@ -1,53 +1,39 @@
 package com.microservices.user.model;
 
-public class AuthenticationResponse {
+public class AuthenticationResponse extends BaseResponseImpl{
 
-  private String username;
-  private boolean isAuthSuccessful;
-  private String jwtToken;
-  private String authMessage;
+  private final String username;
+  private final boolean isAuthSuccessful;
+  private final String jwtAccessToken;
+  private final String jwtRefreshToken;
 
-  public AuthenticationResponse(String username, boolean isAuthSuccessful, String jwtToken, String authMessage) {
+  public AuthenticationResponse(String username,
+                                boolean isAuthSuccessful,
+                                String jwtAccessToken,
+                                String jwtRefreshToken,
+                                int statusCode,
+                                String message) {
+    super(statusCode, message);
     this.username = username;
     this.isAuthSuccessful = isAuthSuccessful;
-    this.jwtToken = jwtToken;
-    this.authMessage = authMessage;
-  }
-
-  public AuthenticationResponse() {
-
+    this.jwtAccessToken = jwtAccessToken;
+    this.jwtRefreshToken = jwtRefreshToken;
   }
 
   public String getUsername() {
     return username;
   }
 
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
   public boolean isAuthSuccessful() {
     return isAuthSuccessful;
   }
 
-  public void setAuthSuccessful(boolean authSuccessful) {
-    isAuthSuccessful = authSuccessful;
+  public String getJwtAccessToken() {
+    return jwtAccessToken;
   }
 
-  public String getJwtToken() {
-    return jwtToken;
-  }
-
-  public void setJwtToken(String jwtToken) {
-    this.jwtToken = jwtToken;
-  }
-
-  public String getAuthMessage() {
-    return authMessage;
-  }
-
-  public void setAuthMessage(String authMessage) {
-    this.authMessage = authMessage;
+  public String getJwtRefreshToken() {
+    return jwtRefreshToken;
   }
 
   @Override
@@ -55,8 +41,8 @@ public class AuthenticationResponse {
     return "AuthenticationResponse{" +
             "username='" + username + '\'' +
             ", isAuthSuccessful=" + isAuthSuccessful +
-            ", jwtToken='" + jwtToken + '\'' +
-            ", authMessage='" + authMessage + '\'' +
+            ", jwtAccessToken='" + jwtAccessToken + '\'' +
+            ", jwtRefreshToken='" + jwtRefreshToken + '\'' +
             '}';
   }
 }

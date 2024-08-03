@@ -11,10 +11,12 @@ import com.microservices.user.dto.awsSns.UserDetails;
 import com.microservices.user.model.AuthenticationRequest;
 import com.microservices.user.model.AuthenticationResponse;
 import com.microservices.user.model.UserRegistrationRequest;
+import com.microservices.user.model.UserRegistrationResponse;
 import com.microservices.user.utils.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -50,7 +52,7 @@ public class AuthenticationService {
         this.jwtUtils = jwtUtils;
         this.amazonSNSClient = amazonSNSClient;
     }
-    public boolean registerUser(UserRegistrationRequest userData) {
+    public UserRegistrationResponse registerUser(UserRegistrationRequest userData) {
 
         UserEntity user = new UserEntity();
         String encodedPassword = passwordEncoder.encode(userData.getPassword());
@@ -65,14 +67,19 @@ public class AuthenticationService {
 
         System.out.println("Publish result => " + publishResult.getMessageId());
 
-        return true;
+        return new UserRegistrationResponse(
+                userData.getUsername(),
+                100,
+                "User Registered Successfully");
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest){
         logger.info("Inside authentication service class");
-
-        AuthenticationResponse authResponse = new AuthenticationResponse();
-
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
                         authenticationRequest.getPassword())
@@ -85,14 +92,16 @@ public class AuthenticationService {
         claimsHashMap.put("SUBSCRIPTION_CATEGORY", user.getSubscriptionCategory());
         claimsHashMap.put("IS_EMAIL_VERIFIED", user.isEmailVerified());
 
-        String jwtToken = jwtUtils.generateToken(claimsHashMap, authenticationRequest.getUsername());
+        String jwtAccessToken = jwtUtils.generateAccessToken(claimsHashMap, authenticationRequest.getUsername());
+        String jwtRefreshToken = jwtUtils.generateRefreshToken(authenticationRequest.getUsername());
 
-        authResponse.setUsername(authenticationRequest.getUsername());
-        authResponse.setAuthSuccessful(true);
-        authResponse.setJwtToken(jwtToken);
-        authResponse.setAuthMessage("User Verified Successfully");
-
-        return authResponse;
+        return new AuthenticationResponse(
+                authenticationRequest.getUsername(),
+                true,
+                jwtAccessToken,
+                jwtRefreshToken,
+                100,
+                "User Verified Successfully");
     }
     private void copyAllFields(UserEntity user, UserRegistrationRequest userData, String encodedPassword){
         user.setUserName(userData.getUsername());
@@ -107,5 +116,25 @@ public class AuthenticationService {
         user.setEmailVerificationOtp(null);
         user.setMobileVerified(false);
         user.setMobileVerificationOtp(null);
+    }
+
+    public AuthenticationResponse refreshToken(String loggedInUser) {
+        UserEntity userEntity = userRepository.findByUserName(loggedInUser);
+
+        Map<String, Object> claimsHashMap = new HashMap<>();
+        claimsHashMap.put("USER_ROLE", userEntity.getUserRole());
+        claimsHashMap.put("SUBSCRIPTION_CATEGORY", userEntity.getSubscriptionCategory());
+        claimsHashMap.put("IS_EMAIL_VERIFIED", userEntity.isEmailVerified());
+
+        String jwtAccessToken = jwtUtils.generateAccessToken(claimsHashMap, loggedInUser);
+        String jwtRefreshToken = jwtUtils.generateRefreshToken(loggedInUser);
+
+        return new AuthenticationResponse(
+                loggedInUser,
+                true,
+                jwtAccessToken,
+                jwtRefreshToken,
+                100,
+                "Refreshed Successfully");
     }
 }

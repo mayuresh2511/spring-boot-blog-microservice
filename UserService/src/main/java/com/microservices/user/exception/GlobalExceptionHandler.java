@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
                 "101",
                 usernameNotFoundException.getMessage(),
                 "User not registered with us !! Please try with registered username or register first");
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorResponse, HttpStatus.OK);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
                 "301",
                 dataIntegrityViolationException.getMessage(),
                 "User with similar username/email already exists");
-        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(errorResponse, HttpStatus.OK);
     }
 
     @ExceptionHandler(NullPointerException.class)

@@ -10,6 +10,7 @@ import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFac
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
 
 @Component
 public class AuthorizationGatewayFilter extends AbstractGatewayFilterFactory<AuthorizationGatewayFilter.Config> {
@@ -30,24 +31,15 @@ public class AuthorizationGatewayFilter extends AbstractGatewayFilterFactory<Aut
             if (config.isPreFilter()){
                 logger.info("Auth filter is on");
                 ServerHttpRequest request;
-                if (validator.isSecured.test(exchange.getRequest())){
+                if (validator.isAccessTokenRequired.test(exchange.getRequest())){
 
-                    if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)){
-                        logger.info("Auth token not passed");
-                        throw new RuntimeException("Auth token not passed");
+                    String token = extractToken(exchange);
+
+                    if (!jwtUtils.extractTokenType(token).equalsIgnoreCase("access_token")){
+                        logger.info("Wrong token type");
+                        throw new RuntimeException("Token type is incorrect please use access token");
                     }
 
-                    String token = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
-                    if (token != null && token.startsWith("Bearer ")){
-                        token = token.substring(7);
-                    }
-                    logger.info("JWT Token : " + token);
-                    boolean isValidToken = jwtUtils.validateToken(token);
-
-                    if (!isValidToken){
-                        logger.info("Token is not valid");
-                        throw new RuntimeException("Token is not valid");
-                    }
                     String userName = jwtUtils.extractUsername(token);
                     String userRole = jwtUtils.extractClaim(token, "USER_ROLE");
                     String userSubscription = jwtUtils.extractClaim(token, "SUBSCRIPTION_CATEGORY");
@@ -60,7 +52,23 @@ public class AuthorizationGatewayFilter extends AbstractGatewayFilterFactory<Aut
                             .header("SUBSCRIPTION_CATEGORY", userSubscription)
                             .build();
                     return chain.filter(exchange.mutate().request(request).build());
-                }else{
+                } else if (exchange.getRequest().getURI().getPath().contains("/user/api/v1/refresh")) {
+                    String token = extractToken(exchange);
+
+                    if (!jwtUtils.extractTokenType(token).equalsIgnoreCase("refresh_token")){
+                        logger.info("Wrong token type");
+                        throw new RuntimeException("Token type is incorrect please use refresh token");
+                    }
+
+                    String userName = jwtUtils.extractUsername(token);
+
+                    request = exchange.getRequest()
+                            .mutate()
+                            .header("loggedInUser", userName)
+                            .header("hashKey", Utility.generateHash(userName))
+                            .build();
+                    return chain.filter(exchange.mutate().request(request).build());
+                } else{
                     request = exchange.getRequest()
                             .mutate()
                             .header("loggedInUser", "Guest")
@@ -73,6 +81,26 @@ public class AuthorizationGatewayFilter extends AbstractGatewayFilterFactory<Aut
                 return chain.filter(exchange);
             }
         });
+    }
+
+    private String extractToken(ServerWebExchange exchange) {
+        if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)){
+            logger.info("Auth token not passed");
+            throw new RuntimeException("Auth token not passed");
+        }
+
+        String token = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+        if (token != null && token.startsWith("Bearer ")){
+            token = token.substring(7);
+        }
+        logger.info("JWT Token : " + token);
+        boolean isValidToken = jwtUtils.validateToken(token);
+
+        if (!isValidToken){
+            logger.info("Token is not valid");
+            throw new RuntimeException("Token is not valid");
+        }
+        return token;
     }
 
     public static class Config{

@@ -11,11 +11,12 @@ public class RouteValidator {
 
     public static final List<String> openApiEndpoints = List.of(
             "/user/api/v1/auth",
+            "/user/api/v1/refresh",
             "/user/api/v1/register",
             "eureka"
     );
 
-    public Predicate<ServerHttpRequest> isSecured =
+    public Predicate<ServerHttpRequest> isAccessTokenRequired =
             request -> openApiEndpoints
                     .stream()
                     .noneMatch(uri -> request.getURI().getPath().contains(uri));

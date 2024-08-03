@@ -1,6 +1,8 @@
 package com.example.gatewayController.util;
 
+import com.thoughtworks.xstream.io.json.JettisonStaxWriter;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -15,7 +17,7 @@ import java.util.function.Function;
 @Component
 public class JwtUtils {
 
-    private static String SECRET_KEY = "2B4B6250655368566D5971337436763979244226452948404D635166546A576E";
+    private static final String SECRET_KEY = "2B4B6250655368566D5971337436763979244226452948404D635166546A576E";
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -23,6 +25,20 @@ public class JwtUtils {
 
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
+    }
+
+    public String extractTokenType(String token){
+        return extractHeader(token, "token_type");
+    }
+
+    private String extractHeader(String token, String headerName){
+        return (String) Jwts
+                .parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getHeader()
+                .get(headerName);
     }
 
     public String extractClaim(String token, String claimKey){
@@ -35,7 +51,7 @@ public class JwtUtils {
         }
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }

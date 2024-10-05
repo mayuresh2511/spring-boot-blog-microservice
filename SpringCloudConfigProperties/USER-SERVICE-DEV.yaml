@@ -4,13 +4,13 @@ spring:
    rabbitmq:
       host: user-service-rabbitmq-container-1
       port: 5672
-      username: guest
-      password: guest
+      username: ${RABBITMQ_USERNAME}
+      password: ${RABBITMQ_PASSWORD}
   #MySQL DB configurations
    datasource:
-      url: jdbc:mysql://user-service-mysqldb-container-1:3306/user_microservice_db
-      username: root
-      password: "#m@y25nov1998#"
+      url: ${USER_MICROSERVICE_MYSQL_URL}
+      username: ${MYSQL_USERNAME}
+      password: ${MYSQL_PASSWORD}
       driver-class-name: com.mysql.cj.jdbc.Driver
    jpa:
       hibernate:
@@ -20,8 +20,8 @@ spring:
             dialect: org.hibernate.dialect.MySQLDialect
   #Reddis Session management configurations
    redis:
-      host: localhost
-      port: 6379
+      host: user-service-redis-container-1
+      port: 6380
    session:
       store-type: redis 
 
@@ -35,7 +35,7 @@ eureka:
       register-with-eureka: true
       fetch-registry: true
       serviceUrl:
-         defaultZone: http://user-service-service-registry-1:8761/eureka/
+         defaultZone: ${EUREKA_DEFAULTZONE}
    instance:
       hostname: localhost
 
@@ -54,3 +54,10 @@ management:
    metrics:
       tags:
          application: USER-SERVICE
+
+#AWS Configuration
+aws:
+   accessKey: ${AWS_ACCESS_KEY}
+   secretKey: ${AWS_SECRET_KEY}
+   region: ${AWS_REGION}
+   snsArn: ${AWS_SNS_ARN}

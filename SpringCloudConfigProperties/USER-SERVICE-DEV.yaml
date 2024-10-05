@@ -2,13 +2,13 @@
 spring:
   #Rabbit MQ configurations
    rabbitmq:
-      host: user-service-rabbitmq-container-1
+      host: userservice-rabbitmq-container-1
       port: 5672
       username: ${RABBITMQ_USERNAME}
       password: ${RABBITMQ_PASSWORD}
   #MySQL DB configurations
    datasource:
-      url: ${USER_MICROSERVICE_MYSQL_URL}
+      url: jdbc:mysql://userservice-mysqldb-container-1:3306/user_microservice_db
       username: ${MYSQL_USERNAME}
       password: ${MYSQL_PASSWORD}
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -20,7 +20,7 @@ spring:
             dialect: org.hibernate.dialect.MySQLDialect
   #Reddis Session management configurations
    redis:
-      host: user-service-redis-container-1
+      host: userservice-redis-container-1
       port: 6380
    session:
       store-type: redis 
